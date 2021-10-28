@@ -9,7 +9,8 @@ import 'react-s-alert/dist/s-alert-css-effects/slide.css';
 
 // import '../scss/bootstrap5.0.2/bootstrap.scss'
 import '../scss/font-awesome6pro/scss/fontawesome.scss'
-// import 'antd/dist/antd.css';
+import 'antd/dist/antd.css';
+import '../scss/styles/main.scss'
 
 function App({ Component, pageProps }: AppProps) {
   return (
@@ -21,7 +22,7 @@ function App({ Component, pageProps }: AppProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content={"hello"} />
         <meta name="author" content={"anho"} />
-        <title>My Project</title>
+        <title>Admin Medical Shop</title>
         <link rel="icon" href="/img/favicon.png" type="image/x-icon" />
         <link rel="shortcut icon" href="/img/favicon.png" type="image/x-icon" />
 
