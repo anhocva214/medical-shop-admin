@@ -9,6 +9,7 @@ import 'react-s-alert/dist/s-alert-css-effects/slide.css';
 
 // import '../scss/bootstrap5.0.2/bootstrap.scss'
 import '../scss/font-awesome6pro/scss/fontawesome.scss'
+import '../scss/font-awesome6pro/scss/solid.scss'
 import 'antd/dist/antd.css';
 import '../scss/styles/main.scss'
 
