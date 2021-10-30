@@ -35,11 +35,15 @@ export default function Home() {
 
   const onLogin = (e: any) => {
     e.preventDefault();
-    set_loading(true)
 
-    Router.push("/admin/dashboard")
+    if (_loginActive){
+      set_loading(true)
 
-    set_loading(false)
+      Router.push("/admin/dashboard")
+  
+      set_loading(false)
+    }
+   
 
   }
 
@@ -73,7 +77,7 @@ export default function Home() {
                 <Button
                   type="primary"
                   htmlType="submit"
-                  loading={_loading} block
+                  loading={_loading} block disabled={!_loginActive}
                   style={{ opacity: _loginActive ? 1 : 0.7 }}>Login</Button>
               </Space>
             </div>

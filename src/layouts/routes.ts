@@ -25,19 +25,9 @@ export const routes: IRoutes[] = [
         icon: createElement(AppstoreOutlined)
     },
     {
-        subMenu: true,
+        subMenu: false,
         title: "product",
         icon: createElement(CodeSandboxOutlined),
-        children: [
-            {
-                title: "list",
-                path: "/admin/user/list"
-            },
-            {
-                title: "add",
-                path: "/admin/product/add"
-            },
-            
-        ]
+        path: "/admin/product"
     }
 ]
