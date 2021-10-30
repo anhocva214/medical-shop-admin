@@ -1,69 +1,65 @@
 import { color } from "@assets/color";
 import AdminLayout from "@layouts/admin-layout";
-import { Form, Input, Space, Tooltip, Button, Row, Col } from 'antd';
-import { EditOutlined, DeleteOutlined, PlusOutlined, SyncOutlined, InfoCircleOutlined } from '@ant-design/icons';
-import { useState, useEffect } from 'react'
-import { green } from '@ant-design/colors';
+import { Form, Input, Space, Tooltip, Button, Steps, Select, Row, Col} from 'antd';
+const { Step } = Steps;
+const { Option } = Select;
+import { EditOutlined, DeleteOutlined, PlusOutlined, SyncOutlined, LeftOutlined } from '@ant-design/icons';
+import { useState, useEffect, useRef } from 'react'
+import { green, gold } from '@ant-design/colors';
+import Router from "next/router";
+import FormInfoProduct from "@components/form/info-product";
+import FormImageProduct from "@components/form/image-product";
 
 export default function ProductAdd() {
     const [form] = Form.useForm();
 
+    const [_formStep, set_formStep] = useState(1)
+
+    const getStatusStep = (index: number) => {
+        if (index < _formStep) return "finish"
+        else if (index == _formStep) return "process"
+        else if (index > _formStep) return "wait"
+    }
 
 
-    const onChangeForm = (values: any) => {
-        console.log(values);
-    };
 
-    const onFinish = (values: any) => {
-        console.log('Received values of form: ', values);
-    };
+    const inputRef = useRef<HTMLInputElement>();
 
     return (
         <AdminLayout>
-            <Row>
-                <Col flex="auto">
-                    <Form
-                        form={form}
-                        layout="vertical"
-                        style={{ width: "100%", backgroundColor: color.sectionDark, padding: 25 }}
-                        // initialValues={{ requiredMarkValue: requiredMark }}
-                        // onValuesChange={onChangeForm}
-                        onFinish={onFinish}
-                    // requiredMark={requiredMark}
-                    >
+            <Button
+                onClick={() => Router.back()}
+                type="text"
+                style={{
+                    backgroundColor: "#0000", color: gold.primary, borderColor: gold.primary,
+                    marginBottom: 20
+                }}
+                icon={<LeftOutlined />}>
+                Back
+            </Button>
 
-                        <Form.Item name="name" label={(<span style={{ color: "#fff" }}>Name</span>)}>
-                            <Input placeholder="Enter name product" />
-                        </Form.Item>
-                        <Form.Item name="description" label={(<span style={{ color: "#fff" }}>Description</span>)}>
-                            <Input.TextArea placeholder="Enter description product" />
-                        </Form.Item>
-                        <Form.Item name="price" label={(<span style={{ color: "#fff" }}>Price</span>)}>
-                            <Input placeholder="Enter price product" type="number" />
-                        </Form.Item>
-                        <Form.Item label={(<span style={{ color: "#fff" }}>Name</span>)}>
-                            <Input placeholder="Enter name product" />
-                        </Form.Item>
-                        <Form.Item>
-                            <Button htmlType="submit" type="primary">Submit</Button>
-                        </Form.Item>
-                    </Form>
-                </Col>
-                <Col span={2}/>
-                <Col span={10}>
-                    <Form
-                        layout="vertical"
-                        style={{ width: "100%", backgroundColor: color.sectionDark, padding: 25 }}
-                    >
-                        <h1 style={{ color: "#fff", textAlign: "center" }}>Details</h1>
+            <Steps
+                // type="navigation"
+                // percent={60}
+                current={_formStep}
+                onChange={set_formStep}
+                className="site-navigation-steps"
+            >
+                <Step status={getStatusStep(0)} title={(<span style={{ color: "#fff" }}>Information</span>)} />
+                <Step status={getStatusStep(1)} title={(<span style={{ color: "#fff" }}>Upload images</span>)} />
+                <Step status={getStatusStep(2)} title={(<span style={{ color: "#fff" }}>Publish</span>)} />
+            </Steps>
 
-                        <Form.Item name="name" label={(<span style={{ color: "#fff" }}>Name</span>)}>
-                            <Input placeholder="Enter name product" />
-                        </Form.Item>
 
-                    </Form>
-                </Col>
-            </Row>
+            {
+                _formStep == 0?(
+                    <FormInfoProduct/>
+                ):(
+                    <FormImageProduct/>
+                )
+            }
+           
+            
 
 
         </AdminLayout>

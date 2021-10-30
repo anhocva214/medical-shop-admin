@@ -46,6 +46,7 @@ export default function AdminLayout(props: IProps) {
     }
 
     const navigateScreens = (path: string) => {
+        set_loadingPage(true)
         Router.push(path)
     }
 
@@ -58,7 +59,7 @@ export default function AdminLayout(props: IProps) {
     useEffect(()=>{
         const pathname = router.pathname;
         routes.forEach((route, index) => {
-            console.log(route.path, " - ", pathname, " ? ", route.path==pathname?true:false)
+            // console.log(route.path, " - ", pathname, " ? ", route.path==pathname?true:false)
 
             if (route.subMenu){
                 route.children.forEach((child, indexChild) => {
@@ -69,7 +70,7 @@ export default function AdminLayout(props: IProps) {
                 })
             }
             else if (route.path == pathname){
-                console.log("hello", "key_"+index)
+                // console.log("hello", "key_"+index)
                 navigatorActions.navigateScreen({
                     tabDefault: "key_"+index,
                     openTabDefault: ""
@@ -196,7 +197,7 @@ export default function AdminLayout(props: IProps) {
                     <Content
                         className="site-layout-background"
                         style={{
-                            padding: 20,
+                            padding: "20px 40px",
                             minHeight: _minHeigth - 60,
 
                         }}
