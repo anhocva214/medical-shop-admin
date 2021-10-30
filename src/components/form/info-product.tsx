@@ -75,20 +75,20 @@ export default function FormInfoProduct() {
         // requiredMark={requiredMark}
         >
 
-            <Form.Item name="name" label={(<h3 style={{ color: "#fff" }}>Name</h3>)}>
+            <Form.Item name="name" label={(<h3 style={{ color: "#fff", marginBottom:0 }}>Name</h3>)}>
                 <Input size="large" placeholder="Enter name product" />
             </Form.Item>
-            <Form.Item name="description" label={(<h3 style={{ color: "#fff" }}>Description</h3>)}>
+            <Form.Item name="description" label={(<h3 style={{ color: "#fff", marginBottom:0 }}>Description</h3>)}>
                 <Input.TextArea size="large" placeholder="Enter description product" />
             </Form.Item>
-            <Form.Item name="categories" label={(<h3 style={{ color: "#fff" }}>Categories</h3>)}>
+            <Form.Item name="categories" label={(<h3 style={{ color: "#fff", marginBottom:0 }}>Categories</h3>)}>
                 <Select size="large" mode="tags" style={{ width: '100%' }} tokenSeparators={[',']}>
                     {children}
                 </Select>
             </Form.Item>
             <Row>
                 <Col span="11">
-                    <Form.Item name="price" label={(<h3 style={{ color: "#fff" }}>Cost</h3>)}>
+                    <Form.Item name="price" label={(<h3 style={{ color: "#fff", marginBottom:0 }}>Cost</h3>)}>
                         <Input
                             type="number"
                             size="large"
@@ -96,11 +96,17 @@ export default function FormInfoProduct() {
                             addonAfter={selectAfter}
                             onChange={(e) => { set_formPrice({ ..._formPrice, origin: parseInt(e.target.value) }) }}
                             min={0} />
+                        <span style={{color: "#fff", paddingLeft: 20}}>
+                            {new Intl.NumberFormat("vi-VN", {
+                                style: "currency",
+                                currency: _formPrice.unit,
+                            }).format(_formPrice.origin || 0)}
+                        </span>
                     </Form.Item>
                 </Col>
                 <Col span="2"></Col>
                 <Col span="11">
-                    <Form.Item name="saleOff" label={(<h3 style={{ color: "#fff" }}>Price</h3>)}>
+                    <Form.Item name="saleOff" label={(<h3 style={{ color: "#fff", marginBottom:0 }}>Price</h3>)}>
                         <Input
                             type="number"
                             size="large"
@@ -109,15 +115,17 @@ export default function FormInfoProduct() {
                             addonAfter={selectAfter}
                             onChange={(e) => { set_formPrice({ ..._formPrice, saleOff: parseInt(e.target.value) }) }}
                             min={0} />
+                        <span style={{color: "#fff", paddingLeft: 20}}>
+                            {new Intl.NumberFormat("vi-VN", {
+                                style: "currency",
+                                currency: _formPrice.unit,
+                            }).format(_formPrice.saleOff || 0)}
+                        </span>
                     </Form.Item>
                 </Col>
             </Row>
 
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <Form.Item style={{ marginBottom: 0 }}>
-                    <Button size="large" style={{ width: 250, marginTop: 20 }} htmlType="submit" type="primary" >Next <i style={{ marginLeft: 5 }} className="fa-solid fa-angle-right"></i></Button>
-                </Form.Item>
-            </div>
+           
         </Form>
 
     )

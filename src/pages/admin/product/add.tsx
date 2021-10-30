@@ -1,6 +1,6 @@
 import { color } from "@assets/color";
 import AdminLayout from "@layouts/admin-layout";
-import { Form, Input, Space, Tooltip, Button, Steps, Select, Row, Col} from 'antd';
+import { Form, Input, Space, Tooltip, Button, Steps, Select, Row, Col } from 'antd';
 const { Step } = Steps;
 const { Option } = Select;
 import { EditOutlined, DeleteOutlined, PlusOutlined, SyncOutlined, LeftOutlined } from '@ant-design/icons';
@@ -10,10 +10,11 @@ import Router from "next/router";
 import FormInfoProduct from "@components/form/info-product";
 import FormImageProduct from "@components/form/image-product";
 
+
 export default function ProductAdd() {
     const [form] = Form.useForm();
 
-    const [_formStep, set_formStep] = useState(1)
+    const [_formStep, set_formStep] = useState(0)
 
     const getStatusStep = (index: number) => {
         if (index < _formStep) return "finish"
@@ -21,6 +22,17 @@ export default function ProductAdd() {
         else if (index > _formStep) return "wait"
     }
 
+    const nextStep = () => {
+        if (_formStep >= 2) return null
+        else
+            set_formStep(_formStep => _formStep + 1)
+    }
+
+    const backStep = () => {
+        if (_formStep <= 0) set_formStep(_formStep => 0)
+        else
+            set_formStep(_formStep => _formStep - 1)
+    }
 
 
     const inputRef = useRef<HTMLInputElement>();
@@ -34,8 +46,8 @@ export default function ProductAdd() {
                     backgroundColor: "#0000", color: gold.primary, borderColor: gold.primary,
                     marginBottom: 20
                 }}
-                icon={<LeftOutlined />}>
-                Back
+                icon={<i className="fa-solid fa-left-to-line" style={{ marginRight: 10, transform: 'scale(1.3)' }}></i>}>
+                Back page
             </Button>
 
             <Steps
@@ -52,14 +64,23 @@ export default function ProductAdd() {
 
 
             {
-                _formStep == 0?(
-                    <FormInfoProduct/>
-                ):(
-                    <FormImageProduct/>
+                _formStep == 0 ? (
+                    <FormInfoProduct />
+                ) : (
+                    <FormImageProduct />
                 )
             }
-           
-            
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <Button onClick={() => backStep()} size="large" style={{ width: 200, marginTop: 20, backgroundColor: "#0000", borderColor: gold.primary, marginRight: 30 }} type="primary" disabled={_formStep<=0?true:false} >
+                    <i style={{ marginRight: 5 }} className="fa-solid fa-angle-left"></i>
+                    Prevent
+                </Button>
+                <Button onClick={() => nextStep()} size="large" style={{ width: 200, marginTop: 20 }} type="primary" >
+                    Next
+                    <i style={{ marginLeft: 5 }} className="fa-solid fa-angle-right"></i>
+                </Button>
+            </div>
+
 
 
         </AdminLayout>

@@ -1,5 +1,5 @@
-import { Form, Upload, message, Button, Modal } from 'antd'
-import {UploadFile} from 'antd/lib/upload/interface'
+import { Form, Upload, message, Button, Modal, Avatar } from 'antd'
+import { UploadFile, ItemRender } from 'antd/lib/upload/interface'
 import { color } from '@assets/color';
 import { useState, useEffect } from 'react'
 import { LoadingOutlined, PlusOutlined, UploadOutlined, InboxOutlined } from '@ant-design/icons';
@@ -8,14 +8,14 @@ const { Dragger } = Upload;
 
 
 
-function getBase64(file) {
+function getBase64(file): Promise<string> {
     return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result.toString());
+        reader.onerror = error => reject(error);
     });
-  }
+}
 
 function beforeUpload(file) {
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
@@ -38,68 +38,19 @@ export default function FormImageProduct() {
         title: null,
         image: null
     })
-    const [_fileList, set_fileList] = useState<UploadFile[]>([
-        {
-            uid: '-1',
-            name: 'image.png',
-            status: 'done',
-            url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        },
-        {
-            uid: '-2',
-            name: 'image.png',
-            status: 'done',
-            url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        },
-        {
-            uid: '-3',
-            name: 'image.png',
-            status: 'done',
-            url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        },
-        {
-            uid: '-4',
-            name: 'image.png',
-            status: 'done',
-            url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        },
-        {
-            uid: '-xxx',
-            percent: 50,
-            name: 'image.png',
-            status: 'uploading',
-            url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        },
-        {
-            uid: '-5',
-            name: 'image.png',
-            status: 'error',
-            url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    const [_fileList, set_fileList] = useState<UploadFile[]>([])
 
-        },
-    ])
+    function checkFile(file: UploadFile) {
+        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+        if (!isJpgOrPng || !isLt2M) {
+            return false
+        }
+        
+        else
+            return true
+    }
 
-    // const props = {
-    //     name: 'file',
-    //     multiple: true,
-    //     onChange(info) {
-    //         const { status } = info.file;
-    //         if (status !== 'uploading') {
-    //             console.log(info.file);
-    //             // console.log(info.fileList)
-    //         }
-    //         if (status === 'done') {
-    //             message.success(`${info.file.name} file uploaded successfully.`);
-    //             set_fileList([..._fileList, info.file])
-
-    //         } else if (status === 'error') {
-    //             message.error(`${info.file.name} file upload failed.`);
-    //         }
-    //     },
-    //     onDrop(e) {
-    //         console.log('Dropped files', e.dataTransfer.files);
-    //     },
-    // };
 
     const onFinish = (values: any) => {
         console.log('Received values of form: ', values);
@@ -115,7 +66,7 @@ export default function FormImageProduct() {
 
     const handlePreview = async file => {
         if (!file.url && !file.preview) {
-          file.preview = await getBase64(file.originFileObj);
+            file.preview = await getBase64(file.originFileObj);
         }
 
         set_modalPreview({
@@ -123,16 +74,23 @@ export default function FormImageProduct() {
             title: file.name || file.url.substring(file.url.lastIndexOf('/') + 1),
             image: file.url || file.preview
         })
-    
+
         // this.setState({
         //   previewImage: file.url || file.preview,
         //   previewVisible: true,
         //   previewTitle: file.name || file.url.substring(file.url.lastIndexOf('/') + 1),
         // });
-      };
-    
-    const handleChange = (data: {fileList: UploadFile[]}) => set_fileList(data.fileList);
-    
+    };
+
+    const handleUploadChange = (data: { fileList: UploadFile[], file: UploadFile }) => {
+        // console.log(data.fileList.filter(item => checkFile(item) == true))
+        // const files = data.fileList.filter(item => checkFile(item) == true)
+        // set_fileList(files)
+        if (checkFile(data.file))
+            set_fileList(data.fileList)
+    };
+
+
 
 
 
@@ -143,7 +101,8 @@ export default function FormImageProduct() {
                 style={{
                     width: "100%", backgroundColor: color.sectionDark,
                     padding: '45px 100px', marginTop: 20, borderRadius: 10,
-                    transition: 'all .4s'
+                    transition: 'all .4s',
+                    minHeight: 500
                 }}
                 onValuesChange={onFinish}
             >
@@ -151,8 +110,16 @@ export default function FormImageProduct() {
                 <h3 style={{ color: "#fff", }}>
                     Upload image
                 </h3>
-{/* 
-                <Dragger {...props} style={{ backgroundColor: "#0000" }}>
+
+                <Dragger
+                    style={{ backgroundColor: "#0000", marginBottom: 20 }}
+                    listType="picture-card"
+                    fileList={_fileList}
+                    onPreview={handlePreview}
+                    onChange={handleUploadChange}
+                    beforeUpload={beforeUpload}
+                    
+                >
                     <p className="ant-upload-drag-icon">
                         <InboxOutlined />
                     </p>
@@ -161,11 +128,11 @@ export default function FormImageProduct() {
                         Support for a single or bulk upload. Strictly prohibit from uploading company data or other
                         band files
                     </p>
-                </Dragger> */}
+                </Dragger>
 
-                <div style={{marginTop: 30}} />
+                <div style={{ marginTop: 30 }} />
 
-                <Upload
+                {/* <Upload
                     listType="picture-card"
                     fileList={_fileList}
                     onPreview={handlePreview}
@@ -174,14 +141,14 @@ export default function FormImageProduct() {
                    
                 >
                     {_fileList.length >= 8 ? null : uploadButton}
-                </Upload>
+                </Upload> */}
 
 
                 <Modal
                     visible={_modalPreview.visible}
                     title={_modalPreview.title}
                     footer={null}
-                    onCancel={()=>set_modalPreview({visible: false, title: null, image: null})}
+                    onCancel={() => set_modalPreview({ visible: false, title: null, image: null })}
                 >
                     <img alt="example" style={{ width: '100%' }} src={_modalPreview.image} />
                 </Modal>
