@@ -1,20 +1,24 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '@store/reducer'
 import { Categories } from 'src/models/categories'
-
+import {IErrorForm} from '@models/form-errors.model'
 
 export interface CategoriesState {
     categories: Categories[];
     loadingList: boolean;
     loadingDelete: boolean;
-    loadingEdit: boolean;
+    loadingComfirm: boolean;
+    formErrors: IErrorForm[],
+    apiStatus: 'success' | 'failure'
 }
 
 export const initialState: CategoriesState = {
     categories: [],
     loadingList: false,
     loadingDelete: false,
-    loadingEdit: false,
+    loadingComfirm: false,
+    formErrors: [], 
+    apiStatus: null
 }
 
 export const categoriesSlice = createSlice({
@@ -26,6 +30,20 @@ export const categoriesSlice = createSlice({
         },
         setLoadingList: (state, {payload}: PayloadAction<boolean>) => {
             state.loadingList = payload
+        },
+        loadingComfirm: (state) =>{
+            state.loadingComfirm = true
+        },
+        createSuccess: (state, {payload}: PayloadAction<Categories>) => {
+            state.categories.push(payload)
+            state.apiStatus = 'success'
+            state.loadingComfirm = false
+            state.formErrors = []
+        },
+        createFailure: (state, {payload}: PayloadAction<IErrorForm[]>) =>{
+            state.apiStatus = 'failure'
+            state.loadingComfirm = false
+            state.formErrors = payload
         }
     },
 })

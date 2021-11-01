@@ -51,6 +51,7 @@ export default function AdminLayout(props: IProps) {
     // }
 
     useEffect(()=>{
+        // navigatorActions.loadingPage(false)
         setTimeout(() => {
             navigatorActions.loadingPage(false)
         }, 500);

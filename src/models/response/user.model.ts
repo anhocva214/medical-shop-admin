@@ -1,15 +1,18 @@
 export class User {
     public id: string;
-    public email: string;
     public username: string;
-    public fullname: string;
+    public password: string;
+    public email: string;
+    public access_token: string;
 
     constructor();
-    constructor(obj?: User);
-    constructor(obj?: any){
+    constructor(user: User);
+    constructor(obj?: any) {
         this.id = obj?.id || "";
-        this.email = obj?.email || "";
         this.username = obj?.username || "";
-        this.fullname = obj?.fullname || "";
+        this.password = obj?.password || "";
+        this.email = obj?.email || "";
+        this.access_token = obj?.access_token || "";
+
     }
 }

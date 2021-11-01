@@ -45,6 +45,9 @@
       ],
       "@assets/*": [
         "./src/assets/*"
+      ],
+      "@models/*": [
+        "./src/models/*"
       ]
     }
   },

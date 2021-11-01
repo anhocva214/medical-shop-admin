@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { Provider } from 'react-redux';
 import store from '@store/index';
 import Alert from 'react-s-alert';
+import { CookiesProvider } from 'react-cookie';
 
 import 'react-s-alert/dist/s-alert-default.css';
 import 'react-s-alert/dist/s-alert-css-effects/slide.css';
@@ -35,10 +36,11 @@ function App({ Component, pageProps }: AppProps) {
       </Head>
 
       <Alert stack={{ limit: 3 }} />
-      <Provider store={store}>
-        <Component {...pageProps} />
-      </Provider>
-
+      <CookiesProvider>
+        <Provider store={store}>
+          <Component {...pageProps} />
+        </Provider>
+      </CookiesProvider>
     </>
   )
 }

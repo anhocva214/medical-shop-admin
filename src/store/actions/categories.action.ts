@@ -4,7 +4,7 @@ import { categoriesApis } from '@apis/categories.api'
 import {message} from 'antd'
 import { Categories } from 'src/models/categories'
 
-const getCategories = (): AppThunk => async (dispatch) => {
+export const getCategories = (): AppThunk => async (dispatch) => {
     try{
         dispatch(sliceActions.setLoadingList(true))
         let res = await categoriesApis.getList();
@@ -18,11 +18,14 @@ const getCategories = (): AppThunk => async (dispatch) => {
 
 }
 
-const createCategories = (): AppThunk => async (dispatch) => {
-    
-}
-
-
-export const categoriesActions = {
-    getCategories: ()=> dispatch(getCategories() as any),
+export const createCategories = (caterories: Categories): AppThunk => async (dispatch) => {
+    try{
+        // dispatch(sliceActions.setLoadingConfirm(true))
+        // let res = await categoriesApis.create(caterories)
+        // dispatch(sliceActions.addCategories(new Categories(res.data)))
+    }
+    catch(err){
+        message.error(err?.message)
+    }
+    // dispatch(sliceActions.setLoadingConfirm(false))
 }

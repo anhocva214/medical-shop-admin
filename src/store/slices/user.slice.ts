@@ -3,20 +3,35 @@ import { RootState } from '@store/reducer'
 import { User } from 'src/models/response/user.model'
 
 export interface UserState {
-    users: User[];
+    user: User;
+    loadingLogin: boolean;
+    auth: boolean;
 }
 
 export const initialState: UserState = {
-    users: []
+    user: new User(),
+    loadingLogin: false,
+    auth: false
 }
 
 export const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        getUsers: (state, {payload}: PayloadAction<User[]>) => {
-            state.users = payload
+        loadingLogin: (state)=>{
+            state.loadingLogin = true
         },
+        loginSuccess: (state, {payload}: PayloadAction<User>) => {
+            state.user = payload;
+            state.loadingLogin = false;
+            state.auth = true;
+        },
+        loginFailure: (state) => {
+            state.user = new User();
+            state.loadingLogin = false;
+            state.auth = false;
+
+        }
     },
 })
 

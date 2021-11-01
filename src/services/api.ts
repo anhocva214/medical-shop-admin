@@ -1,7 +1,8 @@
 
 import axios, {Method} from 'axios';
-import cookie from 'react-cookies';
-
+// import cookie from 'react-cookies';
+import {Cookies} from 'react-cookie'
+const cookie = new Cookies()
 
 const ErrorResponse = (e: any) => {
     try {
@@ -31,7 +32,7 @@ const AxiosBasic = async ({url, method, headers, data}: IPramsRequest)=>{
             url:  process.env.ENDPOINT + url,
             method,
             headers:{
-                token: cookie.load('token'),
+                Authorization: 'Bearer ' + cookie.get('access_token'),
                 ...headers
             },
             data

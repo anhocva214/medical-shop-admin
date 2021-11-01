@@ -12,19 +12,21 @@ import Router from "next/router";
 import { navigatorActions } from "@actions/navigator.action";
 import { pathList } from "@utils/routes";
 import { Categories } from "src/models/categories";
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { slugify } from "@utils/string";
-import { categoriesActions } from "@actions/categories.action";
+import { createCategories, getCategories } from "@actions/categories.action";
 import { useSelector } from "react-redux";
 import { categoriesSelector } from "@store/slices/categories.slice";
+import { dispatch } from '@store/index'
 
 
 export default function CategoriesPage() {
 
-    const {loadingList, categories} = useSelector(categoriesSelector)
+    const {loadingList, categories, loadingConfirm} = useSelector(categoriesSelector)
 
     const [_visibleModal, set_visibleModal] = useState(false);
     const [_form, set_form] = useState<Categories>({} as any)
+    const btnReset = useRef<HTMLButtonElement>();
 
     const columns = [
         {
@@ -80,7 +82,7 @@ export default function CategoriesPage() {
     const [_loadingTable, set_loadingTable] = useState(false)
 
     const refreshData = () => {
-        categoriesActions.getCategories()
+        dispatch(getCategories() as any)
     }
 
     useEffect(() => {
@@ -88,8 +90,15 @@ export default function CategoriesPage() {
     }, [_form.name])
 
     useEffect(() =>{
-        categoriesActions.getCategories()
+        dispatch(getCategories() as any)
     }, [])
+
+    useEffect(() =>{
+        if (!loadingConfirm) {
+            set_visibleModal(false);
+            set_form({} as any)
+        }
+    }, [loadingConfirm])
 
     return (
         <AdminLayout>
@@ -112,13 +121,13 @@ export default function CategoriesPage() {
             <Modal
                 title="Create a new category"
                 visible={_visibleModal}
-                // style={{ backgroundColor: color.sectionDark}}
-                // onOk={handleOk}
-                // confirmLoading={confirmLoading}
+                onOk={()=> dispatch(createCategories(_form) as any)}
+                confirmLoading={loadingConfirm}
                 onCancel={() => set_visibleModal(false)}
+                afterClose={()=> btnReset.current.click()}
             >
 
-                <Form onValuesChange={(a, b) => set_form(b)} layout="vertical" hideRequiredMark>
+                <Form onValuesChange={(a, b) => set_form(b)} layout="vertical" hideRequiredMark >
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
@@ -152,6 +161,7 @@ export default function CategoriesPage() {
                                     outline: 'none',
                                     padding: 6
                                 }}>
+                                    <option value={null}>Choose type</option>
                                     <option value="product">Product</option>
                                     <option value="blog">Blog</option>
                                 </select>
@@ -159,15 +169,7 @@ export default function CategoriesPage() {
                         </Col>
                     </Row>
 
-
-                    {/* <Button
-                        style={{ backgroundColor: green.primary, borderColor: green.primary }}
-                        type="primary"
-                        icon={<PlusOutlined />}
-                        htmlType="submit"
-                    >
-                        Create
-                    </Button> */}
+                    <button ref={btnReset} type="reset" style={{display: 'none'}}></button>
                 </Form>
             </Modal>
 
