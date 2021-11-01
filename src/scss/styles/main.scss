@@ -7,3 +7,11 @@
 
 
 @import "admin-layout";
+
+
+.input-auth{
+    input::placeholder {
+        color: #fff;
+    }
+    border: 2px solid #fff !important;
+}

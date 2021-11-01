@@ -36,14 +36,14 @@ export default function Home() {
   const onLogin = (e: any) => {
     e.preventDefault();
 
-    if (_loginActive){
+    if (_loginActive) {
       set_loading(true)
 
       Router.push("/admin/dashboard")
-  
+
       set_loading(false)
     }
-   
+
 
   }
 
@@ -62,23 +62,28 @@ export default function Home() {
             zIndex: 0,
           }} />
 
-          <form onSubmit={onLogin} action="#" style={{ width: 300, transform: 'translateY(-50px)' }}>
-            <div style={{ padding: 30, backgroundColor: "#071f2138" }}>
+          <form onSubmit={onLogin} action="#" style={{ width: 350, transform: 'translateY(-50px)' }}>
+            <div style={{ padding: 30, backgroundColor: "#071f2185" }}>
               <Space size={10} direction="vertical" style={{ width: '100%' }} >
                 <Input
+                  
                   onChange={(e) => set_username(e.target.value)}
                   placeholder="Username"
+                  className="input-auth"
                   prefix={<UserOutlined />} />
                 <Input
+                  
                   onChange={(e) => set_password(e.target.value)}
                   placeholder="Password"
                   type="password"
+                  className="input-auth"
                   prefix={<LockOutlined />} />
                 <Button
                   type="primary"
                   htmlType="submit"
+                  
                   loading={_loading} block disabled={!_loginActive}
-                  style={{ opacity: _loginActive ? 1 : 0.7 }}>Login</Button>
+                  style={{ ..._loginActive?{}:{opacity: 0.7, borderColor: "#fff", color: "#fff"} }}>Login</Button>
               </Space>
             </div>
           </form>

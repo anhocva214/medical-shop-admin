@@ -11,6 +11,7 @@ import 'react-s-alert/dist/s-alert-css-effects/slide.css';
 import '../scss/font-awesome6pro/scss/fontawesome.scss'
 import '../scss/font-awesome6pro/scss/solid.scss'
 import 'antd/dist/antd.css';
+import 'antd/dist/antd.dark.css'
 import '../scss/styles/main.scss'
 
 function App({ Component, pageProps }: AppProps) {

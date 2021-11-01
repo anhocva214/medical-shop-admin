@@ -1,6 +1,6 @@
 import { color } from "@assets/color";
 import AdminLayout from "@layouts/admin-layout";
-import { Form, Input, Space, Tooltip, Button, Steps, Select, Row, Col } from 'antd';
+import { Form, Input, Space, Tooltip, Button, Steps, Select, Row, Col, DatePicker } from 'antd';
 const { Step } = Steps;
 const { Option } = Select;
 import { EditOutlined, DeleteOutlined, PlusOutlined, SyncOutlined, LeftOutlined } from '@ant-design/icons';
@@ -9,12 +9,16 @@ import { green, gold } from '@ant-design/colors';
 import Router from "next/router";
 import FormInfoProduct from "@components/form/info-product";
 import FormImageProduct from "@components/form/image-product";
+import moment from "moment";
+import FormPublishProduct from "@components/form/publish-product";
+import { navigatorActions } from "@actions/navigator.action";
 
 
 export default function ProductAdd() {
     const [form] = Form.useForm();
 
     const [_formStep, set_formStep] = useState(0)
+    const [_loadingPublish, set_loadingPublish] = useState(false)
 
     const getStatusStep = (index: number) => {
         if (index < _formStep) return "finish"
@@ -34,13 +38,19 @@ export default function ProductAdd() {
             set_formStep(_formStep => _formStep - 1)
     }
 
+    const publishProduct = () => {
+        set_loadingPublish(true);
+        setTimeout(() => {
+            set_loadingPublish(false)
+        }, 1500);
+    }
 
     const inputRef = useRef<HTMLInputElement>();
 
     return (
         <AdminLayout>
             <Button
-                onClick={() => Router.back()}
+                onClick={() => { navigatorActions.routerPush("/admin/product") }}
                 type="text"
                 style={{
                     backgroundColor: "#0000", color: gold.primary, borderColor: gold.primary,
@@ -66,19 +76,31 @@ export default function ProductAdd() {
             {
                 _formStep == 0 ? (
                     <FormInfoProduct />
-                ) : (
+                ) : _formStep == 1 ? (
                     <FormImageProduct />
+                ) : (
+                    <FormPublishProduct/>
                 )
             }
+
+
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <Button onClick={() => backStep()} size="large" style={{ width: 200, marginTop: 20, backgroundColor: "#0000", borderColor: gold.primary, marginRight: 30 }} type="primary" disabled={_formStep<=0?true:false} >
+                <Button onClick={() => backStep()} size="large" style={{ width: 200, marginTop: 20, backgroundColor: "#0000", borderColor: gold.primary, marginRight: 30 }} type="primary" disabled={_formStep <= 0 ? true : false} >
                     <i style={{ marginRight: 5 }} className="fa-solid fa-angle-left"></i>
                     Prevent
                 </Button>
-                <Button onClick={() => nextStep()} size="large" style={{ width: 200, marginTop: 20 }} type="primary" >
-                    Next
-                    <i style={{ marginLeft: 5 }} className="fa-solid fa-angle-right"></i>
-                </Button>
+                {
+                    _formStep <= 1 ? (
+                        <Button onClick={() => nextStep()} size="large" style={{ width: 200, marginTop: 20 }} type="primary" >
+                            Next
+                            <i style={{ marginLeft: 5 }} className="fa-solid fa-angle-right"></i>
+                        </Button>
+                    ) : (
+                        <Button onClick={() => {publishProduct() }} loading={_loadingPublish}  size="large" style={{ width: 200, marginTop: 20, borderColor: green.primary, backgroundColor:green.primary }} type="primary" >
+                            Publish Now
+                        </Button>
+                    )
+                }
             </div>
 
 

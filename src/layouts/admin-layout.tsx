@@ -13,7 +13,7 @@ import {
 } from '@ant-design/icons';
 import { useState, ReactNode, createElement, useEffect } from 'react'
 import { color } from '@assets/color';
-import { routes } from './routes';
+import { routesSidebar } from '@utils/routes';
 import { capitalizeString } from '@utils/string';
 import Router, {useRouter} from 'next/router';
 const { Header, Sider, Content } = Layout;
@@ -31,12 +31,12 @@ interface IProps {
 
 export default function AdminLayout(props: IProps) {
 
-    const { tabDefault, openTabDefault } = useSelector(navigatorSelector)
+    const { tabDefault, openTabDefault, loadingPage } = useSelector(navigatorSelector)
 
     const [_collapsed, set_collapsed] = useState(false)
     const [_defaultTab, set_defaultTab] = useState("key_0")
     const [_defaultOpenTab, set_defaultOpenTab] = useState("")
-    const [_loadingPage, set_loadingPage] = useState(true)
+    // const [_loadingPage, set_loadingPage] = useState(true)
     const [_minHeigth, set_minHeigth] = useState(0)
 
     const router = useRouter()
@@ -45,22 +45,20 @@ export default function AdminLayout(props: IProps) {
 
     }
 
-    const navigateScreens = (path: string) => {
-        set_loadingPage(true)
-        Router.push(path)
-    }
+    // const navigateScreens = (path: string) => {
+    //     set_loadingPage(true)
+    //     Router.push(path)
+    // }
 
     useEffect(()=>{
         setTimeout(() => {
-            set_loadingPage(false)
+            navigatorActions.loadingPage(false)
         }, 500);
     },[])
 
     useEffect(()=>{
         const pathname = router.pathname;
-        routes.forEach((route, index) => {
-            // console.log(route.path, " - ", pathname, " ? ", route.path==pathname?true:false)
-
+        routesSidebar.forEach((route, index) => {
             if (route.subMenu){
                 route.children.forEach((child, indexChild) => {
                     if (child.path == pathname) navigatorActions.navigateScreen({
@@ -70,7 +68,6 @@ export default function AdminLayout(props: IProps) {
                 })
             }
             else if (route.path == pathname){
-                // console.log("hello", "key_"+index)
                 navigatorActions.navigateScreen({
                     tabDefault: "key_"+index,
                     openTabDefault: ""
@@ -110,34 +107,37 @@ export default function AdminLayout(props: IProps) {
                 left: 0,
                 width: '100%',
                 height: '100vh',
-                zIndex: _loadingPage?99999:-1,
+                zIndex: loadingPage?99999:-1,
                 backgroundColor: color.bgDark,
                 transition: 'all .7s',
-                opacity: _loadingPage?1:0
+                opacity: loadingPage?1:0
             }}>
                 <Spin indicator={<LoadingOutlined style={{ fontSize: 34 }} spin />} />
             </div>
             <Layout>
-                <Sider trigger={null} collapsible collapsed={_collapsed} style={{ backgroundColor: "#fff" }} >
+                <Sider trigger={null} collapsible collapsed={_collapsed} style={{ backgroundColor: "#13171c" }} >
                     <div className="logo" style={{ height: 60, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <h2 style={{ color: color.bgDark, margin: 0 }}>anho</h2>
+                        <h2 style={{ color: "#fff", margin: 0 }}>anho</h2>
                     </div>
                     <Menu
-                        theme="light"
+                        theme="dark"
                         mode="inline"
                         selectedKeys={[tabDefault]}
                         openKeys={[openTabDefault]}
+                        style={{
+                            backgroundColor: "#13171c"
+                        }}
                     >
 
                         {
-                            routes.map((r, index) => {
+                            routesSidebar.map((r, index) => {
                                 if (!r.subMenu) {
                                     let key = "key_" + index;
                                     return (
                                         <Menu.Item
                                             key={key}
                                             icon={r.icon}
-                                            onClick={() => navigateScreens(r.path)}
+                                            onClick={() => navigatorActions.routerPush(r.path)}
                                         >
                                             {capitalizeString(r.title)}
                                         </Menu.Item>)
@@ -150,7 +150,7 @@ export default function AdminLayout(props: IProps) {
                                                 return(
                                                     <Menu.Item
                                                         key={key}
-                                                        onClick={() => navigateScreens(child.path)}
+                                                        onClick={() => navigatorActions.routerPush(child.path)}
                                                     >
                                                         {capitalizeString(child.title)}
                                                     </Menu.Item>

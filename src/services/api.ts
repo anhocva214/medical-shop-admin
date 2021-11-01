@@ -5,10 +5,10 @@ import cookie from 'react-cookies';
 
 const ErrorResponse = (e: any) => {
     try {
-        console.log("----------------------------------------------")
+        console.log("/---------------------------------------------\\")
         console.log("Status: ", e.response.status);
         console.log("Data: ", e.response.data)
-        console.log("----------------------------------------------")
+        console.log("\\----------------------------------------------/")
 
         return { ...e.response.data}
     }
@@ -26,17 +26,19 @@ interface IPramsRequest{
 }
 
 const AxiosBasic = async ({url, method, headers, data}: IPramsRequest)=>{
-    return await axios({
-        url:  process.env.ENDPOINT + url,
-        method,
-        headers:{
-            token: cookie.load('token'),
-            ...headers
-        },
-        data
-    }).then(({data})=>{
-        return { ...data }
-    }).catch(e => ErrorResponse(e))
+    return new Promise<any>((resolve, reject) =>{
+        axios({
+            url:  process.env.ENDPOINT + url,
+            method,
+            headers:{
+                token: cookie.load('token'),
+                ...headers
+            },
+            data
+        }).then(({data})=>{
+            resolve(data)
+        }).catch(e => reject(ErrorResponse(e)));
+    })
 }
 
 export default AxiosBasic

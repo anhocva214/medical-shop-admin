@@ -5,6 +5,7 @@ import { EditOutlined, DeleteOutlined, PlusOutlined , SyncOutlined} from '@ant-d
 import {useState} from 'react'
 import { green, blue } from '@ant-design/colors';
 import Router from "next/router";
+import { navigatorActions } from "@actions/navigator.action";
 
 export default function ProductList() {
 
@@ -102,7 +103,7 @@ export default function ProductList() {
                 marginBottom: 20
             }}>
                 <Space size={20}>
-                    <Button onClick={()=>Router.push("/admin/product/add")} style={{ backgroundColor: green.primary, borderColor: green.primary}} type="primary" icon={<PlusOutlined />}>
+                    <Button onClick={()=>navigatorActions.routerPush("/admin/product/add")} style={{ backgroundColor: green.primary, borderColor: green.primary}} type="primary" icon={<PlusOutlined />}>
                         Create
                     </Button>
 

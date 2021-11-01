@@ -4,11 +4,13 @@ import { RootState } from '@store/reducer'
 export interface NavigatorState {
     tabDefault: string,
     openTabDefault: string,
+    loadingPage: boolean,
 }
 
 export const initialState: NavigatorState = {
     tabDefault: "key_0",
-    openTabDefault: ""
+    openTabDefault: "",
+    loadingPage: false
 }   
 
 export const navigatorSlice = createSlice({
@@ -19,6 +21,9 @@ export const navigatorSlice = createSlice({
             state.tabDefault = payload.tabDefault;
             state.openTabDefault = payload.openTabDefault;
         },
+        loadingPage: (state, {payload}: PayloadAction<boolean>)=>{
+            state.loadingPage = payload
+        }
     },
 })
 

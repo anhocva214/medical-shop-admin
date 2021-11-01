@@ -67,7 +67,9 @@ export default function FormInfoProduct() {
             style={{
                 width: "100%", backgroundColor: color.sectionDark,
                 padding: '45px 100px', marginTop: 20, borderRadius: 10,
-                transition: 'all .4s'
+                transition: 'all .4s',
+                minHeight: 500
+
             }}
             // initialValues={{ requiredMarkValue: requiredMark }}
             onValuesChange={onFinish}
