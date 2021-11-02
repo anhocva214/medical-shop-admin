@@ -20,12 +20,24 @@ export const getCategories = (): AppThunk => async (dispatch) => {
 
 export const createCategories = (caterories: Categories): AppThunk => async (dispatch) => {
     try{
-        // dispatch(sliceActions.setLoadingConfirm(true))
-        // let res = await categoriesApis.create(caterories)
-        // dispatch(sliceActions.addCategories(new Categories(res.data)))
+        dispatch(sliceActions.loadingComfirm())
+        let res = await categoriesApis.create(caterories)
+        dispatch(sliceActions.createSuccess(new Categories(res.data)))
     }
     catch(err){
-        message.error(err?.message)
+        // console.log(err)
+        if (err?.message) message.error(err.message)
+        dispatch(sliceActions.createFailure(err?.errors))
     }
-    // dispatch(sliceActions.setLoadingConfirm(false))
+}
+
+export const removeCategory = (id: string): AppThunk => async (dispatch) => {
+    try{
+        dispatch(sliceActions.loadingDelete())
+        let res = await categoriesApis.remove(id)
+        dispatch(sliceActions.deleteSuccess(id))
+    }
+    catch(err){
+        if (err?.message) message.error(err.message)
+    }
 }

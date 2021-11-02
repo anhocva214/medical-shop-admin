@@ -9,7 +9,7 @@ export class Categories{
     constructor(obj: Categories)
     constructor(obj?: any){
         this.id = obj?.id || "";
-        this.key = obj?.key || "";
+        this.key = obj?.id || "";
         this.name = obj?.name || "";
         if (obj?.type != 'product' && obj?.type != 'blog') this.type = "";
         else this.type = obj?.type

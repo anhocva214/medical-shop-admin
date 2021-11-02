@@ -7,11 +7,11 @@ const cookie = new Cookies()
 const ErrorResponse = (e: any) => {
     try {
         console.log("/---------------------------------------------\\")
-        console.log("Status: ", e.response.status);
-        console.log("Data: ", e.response.data)
+        console.log("Status: ", e.response?.status);
+        console.log("Data: ", e.response?.data)
         console.log("\\----------------------------------------------/")
 
-        return { ...e.response.data}
+        return { ...e.response?.data}
     }
     catch (err) {
         console.log(err)

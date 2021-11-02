@@ -14,7 +14,7 @@ import { pathList } from "@utils/routes";
 import { Categories } from "src/models/categories";
 import { useEffect, useRef } from 'react'
 import { slugify } from "@utils/string";
-import { createCategories, getCategories } from "@actions/categories.action";
+import { createCategories, getCategories, removeCategory } from "@actions/categories.action";
 import { useSelector } from "react-redux";
 import { categoriesSelector } from "@store/slices/categories.slice";
 import { dispatch } from '@store/index'
@@ -22,9 +22,10 @@ import { dispatch } from '@store/index'
 
 export default function CategoriesPage() {
 
-    const {loadingList, categories, loadingConfirm} = useSelector(categoriesSelector)
+    const { loadingList, categories, loadingComfirm, formErrors, apiStatus, loadingDelete } = useSelector(categoriesSelector)
 
     const [_visibleModal, set_visibleModal] = useState(false);
+    const [_modalDelete, set_modalDelete] = useState(false)
     const [_form, set_form] = useState<Categories>({} as any)
     const btnReset = useRef<HTMLButtonElement>();
 
@@ -63,12 +64,12 @@ export default function CategoriesPage() {
         {
             title: 'Action',
             key: 'action',
-            render: (text, record) => (
+            render: (text, record: Categories) => (
                 <Space size="middle">
                     <Button type="primary" style={{ backgroundColor: "#0000", color: blue.primary }} icon={<EditOutlined />} >
                         Edit
                     </Button>
-                    <ButtonDelete />
+                    <ButtonDelete id={record.id} />
                 </Space>
             ),
             width: '20%'
@@ -86,19 +87,26 @@ export default function CategoriesPage() {
     }
 
     useEffect(() => {
-        if (!!_form.name) set_form({ ..._form, slug: slugify(_form.name) })
-    }, [_form.name])
-
-    useEffect(() =>{
         dispatch(getCategories() as any)
     }, [])
 
-    useEffect(() =>{
-        if (!loadingConfirm) {
-            set_visibleModal(false);
-            set_form({} as any)
+    // useEffect(() =>{
+    //     if (!loadingComfirm) {
+    //         set_visibleModal(false);
+    //         set_form({} as any)
+    //     }
+    // }, [loadingComfirm])
+
+    useEffect(() => {
+        if (apiStatus == 'success') {
+            set_form(new Categories())
+            set_visibleModal(false)
         }
-    }, [loadingConfirm])
+        else if (apiStatus == 'failure') {
+            // set_visibleModal(false)
+        }
+
+    }, [apiStatus])
 
     return (
         <AdminLayout>
@@ -121,14 +129,14 @@ export default function CategoriesPage() {
             <Modal
                 title="Create a new category"
                 visible={_visibleModal}
-                onOk={()=> dispatch(createCategories(_form) as any)}
-                confirmLoading={loadingConfirm}
+                onOk={() => dispatch(createCategories({ ..._form, slug: slugify(_form.name) }) as any)}
+                confirmLoading={loadingComfirm}
                 onCancel={() => set_visibleModal(false)}
-                afterClose={()=> btnReset.current.click()}
+                afterClose={() => btnReset.current.click()}
             >
 
                 <Form onValuesChange={(a, b) => set_form(b)} layout="vertical" hideRequiredMark >
-                    <Row gutter={16}>
+                    <Row gutter={16} style={{ marginBottom: 20 }}>
                         <Col span={12}>
                             <Form.Item
                                 name="name"
@@ -137,13 +145,17 @@ export default function CategoriesPage() {
                             >
                                 <Input placeholder="Please enter category name" />
                             </Form.Item>
+                            {!!formErrors['name'] && (
+                                <div style={{ color: 'red', fontSize: 12 }}>{formErrors['name']}</div>
+                            )}
+
                         </Col>
                         <Col span={12}>
                             <Form.Item
                                 name="slug"
                                 label="Slug"
                             >
-                                <Input disabled placeholder={_form.slug} value={_form.slug} />
+                                <Input disabled placeholder={slugify(_form.name)} value={slugify(_form.name)} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -166,12 +178,16 @@ export default function CategoriesPage() {
                                     <option value="blog">Blog</option>
                                 </select>
                             </Form.Item>
+                            {!!formErrors['type'] && (
+                                <div style={{ color: 'red', fontSize: 12 }}>{formErrors['type']}</div>
+                            )}
                         </Col>
                     </Row>
 
-                    <button ref={btnReset} type="reset" style={{display: 'none'}}></button>
+                    <button ref={btnReset} type="reset" style={{ display: 'none' }}></button>
                 </Form>
             </Modal>
+
 
 
 
@@ -239,26 +255,47 @@ export default function CategoriesPage() {
                 .ant-select-dropdown{
                     z-index: 9999999;
                 }
+
+                .ant-form-item{
+                    margin-bottom: 0px;
+                }
                 
             `}</style>
         </AdminLayout>
     )
 }
 
-const ButtonDelete = () => {
 
-    const [_loading, set_loading] = useState(false)
+interface IPropsDelete {
+    id: string
+}
 
-    const onDelete = () => {
-        set_loading(true)
-        setTimeout(() => {
-            set_loading(false)
-        }, 1000);
-    }
+const ButtonDelete = (props: IPropsDelete) => {
+
+    const [_visibleModal, set_visibleModal] = useState(false)
+    const { loadingComfirm } = useSelector(categoriesSelector)
+
+
+
+
 
     return (
-        <Button danger onClick={onDelete} loading={_loading} icon={<DeleteOutlined />} style={{ backgroundColor: "#0000" }} >
-            Delete
-        </Button>
+        <>
+
+            <Modal
+                title="Comfirm delete"
+                visible={_visibleModal}
+                onOk={() => dispatch(removeCategory(props.id) as any)}
+                confirmLoading={loadingComfirm}
+                onCancel={() => set_visibleModal(false)}
+            >
+                <span style={{}}>Are you sure you want to <b>delete</b> this category?</span>
+            </Modal>
+
+            <Button danger onClick={()=> set_visibleModal(true)} icon={<DeleteOutlined />} style={{ backgroundColor: "#0000" }} >
+                Delete
+            </Button>
+
+        </>
     )
 }

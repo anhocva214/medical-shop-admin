@@ -8,6 +8,7 @@ export interface CategoriesState {
     loadingList: boolean;
     loadingDelete: boolean;
     loadingComfirm: boolean;
+    loadingUpdate: boolean;
     formErrors: IErrorForm[],
     apiStatus: 'success' | 'failure'
 }
@@ -18,7 +19,8 @@ export const initialState: CategoriesState = {
     loadingDelete: false,
     loadingComfirm: false,
     formErrors: [], 
-    apiStatus: null
+    apiStatus: null, 
+    loadingUpdate: false
 }
 
 export const categoriesSlice = createSlice({
@@ -44,7 +46,20 @@ export const categoriesSlice = createSlice({
             state.apiStatus = 'failure'
             state.loadingComfirm = false
             state.formErrors = payload
+        },
+        loadingDelete: (state) => {
+            state.loadingDelete = true
+        },
+        deleteSuccess: (state, {payload}: PayloadAction<string>) => {
+            state.loadingDelete = false;
+            state.categories = state.categories.filter(item => item.id != payload)
+            state.formErrors = []
+        },
+        deleteFailure: (state, {payload}: PayloadAction<IErrorForm[]>) => {
+            state.loadingDelete = false;
+            state.formErrors = payload
         }
+
     },
 })
 
