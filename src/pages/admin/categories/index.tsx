@@ -191,10 +191,6 @@ export default function CategoriesPage() {
                     border-bottom: 1px solid #ffffff1c !important;
                 }
 
-                // .table-data-row:last-child .ant-table-cell{
-                //     border-bottom: 0px solid #ffffff1c !important;
-                // }
-
                 .ant-pagination-item{
                     border: 1px solid ${color.sectionDark};
                 }

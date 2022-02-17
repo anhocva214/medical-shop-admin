@@ -15,7 +15,7 @@ class MyDocument extends Document {
 
 
 
-                    <script src="https://code.jquery.com/jquery-3.6.0.slim.js"
+                    {/* <script src="https://code.jquery.com/jquery-3.6.0.slim.js"
                         integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY=" crossOrigin="anonymous"></script>
                     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
                         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
@@ -25,7 +25,7 @@ class MyDocument extends Document {
                         crossOrigin="anonymous"></script>
                     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
                         integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/"
-                        crossOrigin="anonymous"></script>
+                        crossOrigin="anonymous"></script> */}
 
                 </body>
             </Html>

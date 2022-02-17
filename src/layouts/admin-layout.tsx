@@ -15,7 +15,7 @@ import { useState, ReactNode, createElement, useEffect } from 'react'
 import { color } from '@assets/color';
 import { routesSidebar } from '@utils/routes';
 import { capitalizeString } from '@utils/string';
-import Router, {useRouter} from 'next/router';
+import Router, { useRouter } from 'next/router';
 const { Header, Sider, Content } = Layout;
 import { navigatorSelector } from '@slices/navigator.slice'
 import { useSelector } from 'react-redux'
@@ -50,37 +50,37 @@ export default function AdminLayout(props: IProps) {
     //     Router.push(path)
     // }
 
-    useEffect(()=>{
+    useEffect(() => {
         setTimeout(() => {
             navigatorActions.loadingPage(false)
         }, 500);
-    },[])
+    }, [])
 
-    useEffect(()=>{
+    useEffect(() => {
         const pathname = router.pathname;
         routesSidebar.forEach((route, index) => {
-            if (route.subMenu){
+            if (route.subMenu) {
                 route.children.forEach((child, indexChild) => {
                     if (child.path == pathname) navigatorActions.navigateScreen({
-                        tabDefault: "child_"+index+"_"+indexChild,
-                        openTabDefault: "key_"+index
+                        tabDefault: "child_" + index + "_" + indexChild,
+                        openTabDefault: "key_" + index
                     })
                 })
             }
-            else if (route.path == pathname){
+            else if (route.path == pathname) {
                 navigatorActions.navigateScreen({
-                    tabDefault: "key_"+index,
+                    tabDefault: "key_" + index,
                     openTabDefault: ""
                 })
             }
         })
 
-       
+
     }, [])
 
     useEffect(() => {
         set_minHeigth(window.innerHeight)
-    },[])
+    }, [])
 
 
     const menu = (
@@ -102,15 +102,15 @@ export default function AdminLayout(props: IProps) {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                position: 'absolute', 
+                position: 'absolute',
                 top: 0,
                 left: 0,
                 width: '100%',
                 height: '100vh',
-                zIndex: loadingPage?99999:-1,
+                zIndex: loadingPage ? 99999 : -1,
                 backgroundColor: color.bgDark,
                 transition: 'all .7s',
-                opacity: loadingPage?1:0
+                opacity: loadingPage ? 1 : 0
             }}>
                 <Spin indicator={<LoadingOutlined style={{ fontSize: 34 }} spin />} />
             </div>
@@ -142,24 +142,23 @@ export default function AdminLayout(props: IProps) {
                                             {capitalizeString(r.title)}
                                         </Menu.Item>)
                                 }
-                                else {
-                                    return (
-                                        <SubMenu key={"key_" + index} icon={r.icon} title={capitalizeString(r.title)}>
-                                            {r.children.map((child, iChild) => {
-                                                let key = "child_" + index + "_" + iChild;
-                                                return(
-                                                    <Menu.Item
-                                                        key={key}
-                                                        onClick={() => navigatorActions.routerPush(child.path)}
-                                                    >
-                                                        {capitalizeString(child.title)}
-                                                    </Menu.Item>
-                                                )
-                                            })}
+                                else return (
+                                    <SubMenu key={"key_" + index} icon={r.icon} title={capitalizeString(r.title)}>
+                                        {r.children.map((child, iChild) => {
+                                            let key = "child_" + index + "_" + iChild;
+                                            return (
+                                                <Menu.Item
+                                                    key={key}
+                                                    onClick={() => navigatorActions.routerPush(child.path)}
+                                                >
+                                                    {capitalizeString(child.title)}
+                                                </Menu.Item>
+                                            )
+                                        })}
 
-                                        </SubMenu>
-                                    )
-                                }
+                                    </SubMenu>
+                                )
+
                             })
                         }
 
